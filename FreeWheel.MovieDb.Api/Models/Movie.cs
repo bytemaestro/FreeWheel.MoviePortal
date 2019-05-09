@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreeWheel.MovieDb.Api.Models
 {
-    [Table("Movie")]
     public class Movie
     {
         [Key]
@@ -14,7 +13,9 @@ namespace FreeWheel.MovieDb.Api.Models
 
         public int Year { get; set; }
 
-        public List<Review> UserReviews { get; set; }
+        public List<string> Genres { get; set; } = new List<string>();
+
+        public List<Review> UserReviews { get; set; } = new List<Review>();
 
     }
 }

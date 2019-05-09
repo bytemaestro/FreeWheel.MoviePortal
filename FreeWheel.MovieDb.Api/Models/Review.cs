@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreeWheel.MovieDb.Api.Models
 {
-    [Table("Review")]
     public class Review
     {
         private readonly int _maxRating;

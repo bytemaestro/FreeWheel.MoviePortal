@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FreeWheel.MovieDb.Api.Contexts;
+using FreeWheel.MovieDb.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +27,13 @@ namespace FreeWheel.MovieDb.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            //services
+            services.AddTransient<IMoviesService, MoviesService>();
+
+            //db contexts
+            services.AddDbContext<MoviesContext>();
+            //services.AddDbContext<MoviesContext>().AddEntityFrameworkInMemoryDatabase();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
