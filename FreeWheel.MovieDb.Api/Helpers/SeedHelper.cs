@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using FreeWheel.MovieDb.Api.Models;
-using System.Collections.Generic;
 
 namespace FreeWheel.MovieDb.Api.Helpers
 {
@@ -10,37 +9,72 @@ namespace FreeWheel.MovieDb.Api.Helpers
         {
             #region MovieSeed
 
+            modelBuilder.Entity<Genre>().HasData(
+                new Genre { GenreId = 1, Name = "SciFi" },
+                new Genre { GenreId = 2, Name = "Fantasy" },
+                new Genre { GenreId = 3, Name = "Action" },
+                new Genre { GenreId = 4, Name = "Thriller" }
+                );
+
             modelBuilder.Entity<Movie>().HasData(
-                new Movie() { MovieId = 1, Title = "Star Wars - The Empire Strikes Back", Year = 1984, Genres = new List<string> { "SciFi", "Fantasy" } },
-                new Movie() { MovieId = 2, Title = "The Matrix", Year = 1990, Genres = new List<string> { "SciFi", "Action" } },
-                new Movie() { MovieId = 3, Title = "Vanilla Sky", Year = 1995, Genres = new List<string> { "SciFi", "Thriller" } },
-                new Movie() { MovieId = 4, Title = "Man On Fire", Year = 1995, Genres = new List<string> { "Thriller", "Action" } });
+                 new Movie() { MovieId = 1, Title = "Star Wars - The Empire Strikes Back", Year = 1984 },
+                 new Movie() { MovieId = 2, Title = "The Matrix", Year = 1990 },
+                 new Movie() { MovieId = 3, Title = "Vanilla Sky", Year = 1995 },
+                 new Movie() { MovieId = 4, Title = "Man On Fire", Year = 1995 },
+                 new Movie() { MovieId = 5, Title = "Lights Out", Year = 1988 }
+                );
+
+            modelBuilder.Entity<Movie>().OwnsMany(p => p.MovieGenres, a =>
+            {
+                a.HasForeignKey("MovieId");
+                a.HasForeignKey("GenreId");
+                a.HasKey("MovieId", "GenreId");
+            });
+
+            modelBuilder.Entity<MovieGenre>().HasData(
+                new MovieGenre() { Id = 1, GenreId = 1, MovieId = 1 },
+                new MovieGenre() { Id = 2, GenreId = 2, MovieId = 1 },
+                new MovieGenre() { Id = 3, GenreId = 3, MovieId = 2 },
+                new MovieGenre() { Id = 4, GenreId = 4, MovieId = 2 },
+                new MovieGenre() { Id = 5, GenreId = 1, MovieId = 3 },
+                new MovieGenre() { Id = 6, GenreId = 2, MovieId = 3 },
+                new MovieGenre() { Id = 7, GenreId = 4, MovieId = 4 },
+                new MovieGenre() { Id = 8, GenreId = 4, MovieId = 5 }
+
+                );
 
             #endregion
 
             #region UserSeed
 
-            modelBuilder.Entity<User>().HasData(
-                new User() { UserId = 1, UserName = "reidklein"  },
-                new User() { UserId = 2, UserName = "hankaaron" },
-                new User() { UserId = 3, UserName = "johndoe" });
+            modelBuilder.Entity<User>(u =>
+            {
+                u.HasData(
+                    new User() { UserId = 1, UserName = "reidklein" },
+                    new User() { UserId = 2, UserName = "hankaaron" },
+                    new User() { UserId = 3, UserName = "johndoe" });
+
+               // u.OwnsMany(ur => ur.UserReviews);
+            });
+                
 
             #endregion
-
+          
 
 
             #region ReviewSeed
 
-            modelBuilder.Entity<Review>().HasData(
+            modelBuilder.Entity<Review>(r => {
+                r.HasData(
 
-                new Review { ReviewId = 1, UserId = 1, MovieId = 1 , Rating = 4 },
+                new Review { ReviewId = 1, UserId = 1, MovieId = 1, Rating = 4 },
                 new Review { ReviewId = 2, UserId = 1, MovieId = 2, Rating = 5 },
                 new Review { ReviewId = 3, UserId = 1, MovieId = 3, Rating = 5 },
                 new Review { ReviewId = 4, UserId = 2, MovieId = 1, Rating = 3 },
-                new Review { ReviewId = 5, UserId = 2, MovieId = 2, Rating = 4},
-                new Review { ReviewId = 6, UserId = 2, MovieId = 3, Rating = 4 }
+                new Review { ReviewId = 5, UserId = 2, MovieId = 2, Rating = 4 },
+                new Review { ReviewId = 6, UserId = 2, MovieId = 3, Rating = 4 });
 
-               );
+               });
 
             #endregion
         }

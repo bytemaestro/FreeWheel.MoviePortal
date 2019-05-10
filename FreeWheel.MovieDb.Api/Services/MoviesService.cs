@@ -3,7 +3,6 @@ using FreeWheel.MovieDb.Api.Contexts;
 using FreeWheel.MovieDb.Api.Models;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Extensions.Internal;
 
 namespace FreeWheel.MovieDb.Api.Services
 {
@@ -21,24 +20,24 @@ namespace FreeWheel.MovieDb.Api.Services
             return _db;
         }
 
-        public void Add(string title, int year, List<string> genres)
-        {
-            var movie = new Movie { Title = title, Year = year, Genres = genres };
+        //public void Add(string title, int year, List<Genre> genres)
+        //{
+        //    var movie = new Movie { Title = title, Year = year, MovieGenres = genres };
 
-            movie.MovieId = _db.Movies.Max(m => m.MovieId) + 1;
+        //    movie.MovieId = _db.Movies.Max(m => m.MovieId) + 1;
 
-            _db.Movies.Add(movie);
+        //    _db.Movies.Add(movie);
 
-            _db.SaveChanges();
-        }
+        //    _db.SaveChanges();
+        //}
 
-        public IEnumerable<Movie> Find(string title, int year, List<string> genres)
+        public IEnumerable<Movie> Find(string title, int year, List<Genre> genres)
         {
             var query = _db.Movies.AsEnumerable();
 
             if (!string.IsNullOrEmpty(title))
             {
-                query = query.Where(m => m.Title.Contains(title));
+                query = query.Where(m => m.Title.Contains(title, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (year != 0)
@@ -48,11 +47,16 @@ namespace FreeWheel.MovieDb.Api.Services
 
             if (genres.Any())
             {
-                query = query.Where(m => m.Genres.Any( g => genres.Any()) );
+                query = query.Where(m => m.MovieGenres.Any(mg => genres.Any()));
             }
 
             return query.ToList();
 
+        }
+
+        public IEnumerable<Genre> GetGenres()
+        {
+           return _db.Genres.ToList();
         }
     }
 }

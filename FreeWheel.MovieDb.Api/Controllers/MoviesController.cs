@@ -20,26 +20,34 @@ namespace FreeWheel.MovieDb.Api.Controllers
         public MoviesController(IMoviesService service)
         {
             _movies = service;
+            _movies.Context().Database.EnsureCreated(); //seems necessary for In-Memory creation
         }
 
-        // GET: api/Movies
-        [HttpGet]
-        public ActionResult<IEnumerable<Movie>> GetMovies()
-        {
-            var movies = _movies.Find("", 0 , null);
+        //// GET: api/Movies
+        //[HttpGet]
+        //public ActionResult<IEnumerable<Movie>> GetMovies()
+        //{
+        //    var movies = _movies.Find("", 0 , null);
 
-            return movies.ToList();
-        }
+        //    return movies.ToList();
+        //}
 
         // GET: api/Movies
         [HttpGet]
         public ActionResult<IEnumerable<Movie>> GetMovies(string title, int year, string genreList)
         {
-            var genres = new List<string>();
+            if (string.IsNullOrEmpty(title) && year == 0 && string.IsNullOrEmpty(genreList))
+            {
+                return BadRequest();
+            }
+            var genres = new List<Genre>();
 
             if (!string.IsNullOrEmpty(genreList))
             {
-                genres = genreList.Split(",").ToList();
+                var genresParam = genreList.Split(",").ToList();
+
+                //  ListA.Where(a => ListX.Any(x => x.b == a.b))
+                genres = _movies.GetGenres().Where(gl => genresParam.Contains(gl.Name)).ToList();
             }
 
             var movies = _movies.Find(title, year, genres);

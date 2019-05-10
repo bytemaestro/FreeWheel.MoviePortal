@@ -8,8 +8,10 @@ namespace FreeWheel.MovieDb.Api.Services
     {
         MoviesContext Context();
 
-        void Add(string title, int year, List<string> genres);
+       // void Add(string title, int year, List<MovieGenre> genres);
 
-        IEnumerable<Movie> Find(string title, int year, List<string> genres);
+        IEnumerable<Movie> Find(string title, int year, List<Genre> genres);
+
+        IEnumerable<Genre> GetGenres();
     }
 }
