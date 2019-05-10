@@ -47,7 +47,7 @@ namespace FreeWheel.MovieDb.Api.Services
 
             if (genres.Any())
             {
-                //query genres
+               //query only matching all genres
                genres.ForEach(g =>
                {
                     query = query.Where(m => m.MovieGenres.Any(x => x.GenreId == g.GenreId));
@@ -55,6 +55,29 @@ namespace FreeWheel.MovieDb.Api.Services
             }
 
             return query.ToList();
+
+        }
+
+        public IEnumerable<object> TopRatedMovies()
+        {
+            List<dynamic> list = new List<dynamic>();
+
+            _db.Movies.ToList().ForEach(m =>
+           {
+                var q = m.UserReviews.GroupBy(r => r.MovieId, rt => rt.Rating)
+                           .Select(g => new
+                           {
+                               MovieId = g.Key,
+                               Rating = g.Average()
+                           });
+
+               list.Add(q);
+               
+
+           });
+
+
+            return list.ToList();
 
         }
 

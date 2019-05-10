@@ -7,7 +7,7 @@ using FreeWheel.MovieDb.Api.Services;
 
 namespace FreeWheel.MovieDb.Api.Controllers
 {
-    [Route("api/[controller]")]
+    
     [ApiController]
     public class MoviesController : ControllerBase
     {
@@ -30,6 +30,7 @@ namespace FreeWheel.MovieDb.Api.Controllers
 
         // GET: api/Movies
         [HttpGet]
+        [Route("api/[controller]")]
         public ActionResult<IEnumerable<Movie>> GetMovies(string title, int year, string genreList)
         {
             if (string.IsNullOrEmpty(title) && year == 0 && string.IsNullOrEmpty(genreList))
@@ -50,11 +51,12 @@ namespace FreeWheel.MovieDb.Api.Controllers
             return movies.ToList();
         }
 
-        //[HttpGet]
-        //[Route("api/[controller]/topaverage/")]
-        //public ActionResult<IEnumerable<Movie>> GetTopRatedMovies()
-        //{
-        //}
+        [HttpGet]
+        [Route("api/[controller]/ratings/top")]
+        public ActionResult<IEnumerable<object>> GetTopRatedMovies()
+        {
+            return _movies.TopRatedMovies().ToList();
+        }
 
         //[HttpGet]
         //[Route("api/[controller]/usertop/")]

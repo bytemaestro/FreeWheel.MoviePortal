@@ -13,5 +13,6 @@ namespace FreeWheel.MovieDb.Api.Services
         IEnumerable<Movie> Find(string title, int year, List<Genre> genres);
 
         IEnumerable<Genre> GetGenres();
+        IEnumerable<object> TopRatedMovies();
     }
 }
