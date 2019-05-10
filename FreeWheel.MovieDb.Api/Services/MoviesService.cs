@@ -113,7 +113,7 @@ namespace FreeWheel.MovieDb.Api.Services
             {
                 var rates = m.UserReviews
                       .Where(r => r != null)
-                      .GroupBy(r => r.MovieId, rt => rt.Rating)
+                      .GroupBy(r => r.Movie.Title,  rt => rt.Rating)
                       .Select(g => new
                       {
                           MovieId = g.Key,

@@ -17,11 +17,16 @@ namespace FreeWheel.MovieDb.Api.Helpers
              );
 
             modelBuilder.Entity<Movie>().HasData(
-                 new Movie() { MovieId = 1, Title = "Star Wars - The Empire Strikes Back", Year = 1984 },
-                 new Movie() { MovieId = 2, Title = "The Matrix", Year = 1990 },
-                 new Movie() { MovieId = 3, Title = "Vanilla Sky", Year = 1995 },
-                 new Movie() { MovieId = 4, Title = "Man On Fire", Year = 1995 },
-                 new Movie() { MovieId = 5, Title = "Lights Out", Year = 1988 }
+                 new Movie() { MovieId = 1, Title = "Star Wars - The Empire Strikes Back", Year = 1980 },
+                 new Movie() { MovieId = 2, Title = "The Matrix", Year = 1999 },
+                 new Movie() { MovieId = 3, Title = "Vanilla Sky", Year = 2001 },
+                 new Movie() { MovieId = 4, Title = "Man On Fire", Year = 2004 },
+                 new Movie() { MovieId = 5, Title = "Lights Out", Year = 1946 },
+                 new Movie() { MovieId = 6, Title = "The Captive", Year = 2014 },
+                 new Movie() { MovieId = 7, Title = "Secret in the their Eyes", Year = 1988 },
+                 new Movie() { MovieId = 8, Title = "The Butterfly Effect", Year = 2004 },
+                 new Movie() { MovieId = 9, Title = "The Sixth Sense", Year = 1999 },
+                 new Movie() { MovieId = 10, Title = "National Tresure", Year = 2004 }
                 );
 
             modelBuilder.Entity<Movie>().OwnsMany(p => p.MovieGenres, a =>
@@ -48,12 +53,14 @@ namespace FreeWheel.MovieDb.Api.Helpers
                 new MovieGenre() { MovieId = 3, GenreId = 2 },
                 new MovieGenre() { MovieId = 4, GenreId = 3 },
                 new MovieGenre() { MovieId = 4, GenreId = 4 },
-                new MovieGenre() { MovieId = 5, GenreId = 4 }
-
+                new MovieGenre() { MovieId = 5, GenreId = 4 },
+                new MovieGenre() { MovieId = 6, GenreId = 4 },
+                new MovieGenre() { MovieId = 7, GenreId = 4 },
+                new MovieGenre() { MovieId = 8, GenreId = 4 },
+                new MovieGenre() { MovieId = 9, GenreId = 4 },
+                new MovieGenre() { MovieId = 10, GenreId = 3 },
+                new MovieGenre() { MovieId = 10, GenreId = 4 }
                 );
-
-        
-
 
             #endregion
 
@@ -69,14 +76,7 @@ namespace FreeWheel.MovieDb.Api.Helpers
               
             });
 
-            //modelBuilder.Entity<Review>().OwnsOne(p => p.Movie, a =>
-            //{
-            //    a.HasForeignKey("MovieId");
-            //});
-
             #endregion
-
-
 
             #region ReviewSeed
 
@@ -91,18 +91,6 @@ namespace FreeWheel.MovieDb.Api.Helpers
                 new Review { ReviewId = 6, UserId = 2, MovieId = 3, Rating = 4 });
 
                });
-
-
-            //modelBuilder.Entity<User>().OwnsMany(p => p.UserReviews, a =>
-            //{
-            //    a.HasForeignKey("UserId");
-            //    a.Property<int>("UserId");
-            //    a.HasKey("ReviewId", "MovieId", "UserId");
-            //});
-
-
-     
-
 
             #endregion
         }
