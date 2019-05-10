@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeWheel.MovieDb.Api", "FreeWheel.MovieDb.Api\FreeWheel.MovieDb.Api.csproj", "{61CD58A8-9B0E-44CC-98FA-3D4CDF561300}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeWheel.MovieDb.Api.UnitTest", "FreeWheel.MovieDb.Api.UnitTest\FreeWheel.MovieDb.Api.UnitTest.csproj", "{65BCA0FD-74C8-45FD-9BE8-8DB747FEB562}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{61CD58A8-9B0E-44CC-98FA-3D4CDF561300}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61CD58A8-9B0E-44CC-98FA-3D4CDF561300}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61CD58A8-9B0E-44CC-98FA-3D4CDF561300}.Release|Any CPU.Build.0 = Release|Any CPU
-		{65BCA0FD-74C8-45FD-9BE8-8DB747FEB562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{65BCA0FD-74C8-45FD-9BE8-8DB747FEB562}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{65BCA0FD-74C8-45FD-9BE8-8DB747FEB562}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{65BCA0FD-74C8-45FD-9BE8-8DB747FEB562}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

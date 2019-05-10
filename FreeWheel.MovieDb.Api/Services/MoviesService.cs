@@ -4,6 +4,7 @@ using FreeWheel.MovieDb.Api.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace FreeWheel.MovieDb.Api.Services
 {
@@ -27,7 +28,7 @@ namespace FreeWheel.MovieDb.Api.Services
         /// <param name="userId"></param>
         /// <param name="movieId"></param>
         /// <param name="rating"></param>
-        public void RateMovie(int userId, int movieId, int rating)
+        public async Task<Review> RateMovieAsync(int userId, int movieId, int rating)
         {
             try
             {
@@ -41,28 +42,30 @@ namespace FreeWheel.MovieDb.Api.Services
                 if (review != null)
                 {
                      review.Rating = rating;
+
                     _db.Entry(review).State = EntityState.Modified;
+
                     _db.Ratings.Update(review);
-                    
+
                 }
                 else
                 {
-                    var reviewId = _db.Ratings.Max(x => x.ReviewId);
+                    var reviewId = _db.Ratings.Max(x => x.ReviewId); 
                     review = new Review { ReviewId = reviewId + 1, MovieId = movieId, UserId = userId, Rating = rating };
 
                     _db.Entry(review).State = EntityState.Added;
 
                     _db.Ratings.Add(review);
-                   
                 }
 
-                _db.SaveChanges();
+                await _db.SaveChangesAsync().ConfigureAwait(false);
+
+                return review;
             }
             catch (Exception)
             {
                 throw;
             }
-
         }
 
         /// <summary>
@@ -96,7 +99,6 @@ namespace FreeWheel.MovieDb.Api.Services
             }
 
             return query.ToList();
-
         }
 
         /// <summary>
@@ -109,7 +111,6 @@ namespace FreeWheel.MovieDb.Api.Services
 
            _db.Movies.ToList().ForEach(m =>
             {
-
                 var rates = m.UserReviews
                       .Where(r => r != null)
                       .GroupBy(r => r.MovieId, rt => rt.Rating)

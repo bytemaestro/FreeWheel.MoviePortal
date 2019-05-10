@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using FreeWheel.MovieDb.Api.Contexts;
 using FreeWheel.MovieDb.Api.Models;
 
@@ -14,7 +15,8 @@ namespace FreeWheel.MovieDb.Api.Services
 
         IEnumerable<object> GetAverageMovieRating();
 
-        void RateMovie(int userId, int movieId, int rating);
         IEnumerable<object> GetUserRatings(int userId);
+
+        Task<Review> RateMovieAsync(int userId, int movieId, int rating);
     }
 }
