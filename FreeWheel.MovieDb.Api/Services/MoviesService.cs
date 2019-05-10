@@ -109,18 +109,24 @@ namespace FreeWheel.MovieDb.Api.Services
 
            _db.Movies.ToList().ForEach(m =>
             {
-                ratings.Add(
-                    m.UserReviews
-                        .GroupBy(r => r.MovieId, rt => rt.Rating)
-                        .Select(g => new
-                        {
-                            MovieId = g.Key,
-                            Rating = g.Average()
-                        })
-                    );
+
+                var rates = m.UserReviews
+                      .Where(r => r != null)
+                      .GroupBy(r => r.MovieId, rt => rt.Rating)
+                      .Select(g => new
+                      {
+                          MovieId = g.Key,
+                          AverageRating = g.Average()
+                      });
+
+                if (rates.Any())
+                {
+                    ratings.AddRange(rates);
+                }
+                    
            });
 
-          return ratings.ToList().OrderByDescending(x => x.Rating);
+          return ratings.OrderByDescending(r => r.AverageRating).ToList();
         }
 
         public IEnumerable<object> GetUserRatings(int userId)
