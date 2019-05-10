@@ -10,11 +10,11 @@ namespace FreeWheel.MovieDb.Api.Helpers
             #region MovieSeed
 
             modelBuilder.Entity<Genre>().HasData(
-                new Genre { GenreId = 1, Name = "SciFi" },
-                new Genre { GenreId = 2, Name = "Fantasy" },
-                new Genre { GenreId = 3, Name = "Action" },
-                new Genre { GenreId = 4, Name = "Thriller" }
-                );
+             new Genre { GenreId = 1, Name = "SciFi" },
+             new Genre { GenreId = 2, Name = "Fantasy" },
+             new Genre { GenreId = 3, Name = "Action" },
+             new Genre { GenreId = 4, Name = "Thriller" }
+             );
 
             modelBuilder.Entity<Movie>().HasData(
                  new Movie() { MovieId = 1, Title = "Star Wars - The Empire Strikes Back", Year = 1984 },
@@ -27,21 +27,25 @@ namespace FreeWheel.MovieDb.Api.Helpers
             modelBuilder.Entity<Movie>().OwnsMany(p => p.MovieGenres, a =>
             {
                 a.HasForeignKey("MovieId");
-                a.HasForeignKey("GenreId");
+                a.Property<int>("MovieId");
                 a.HasKey("MovieId", "GenreId");
             });
 
             modelBuilder.Entity<MovieGenre>().HasData(
-                new MovieGenre() { Id = 1, GenreId = 1, MovieId = 1 },
-                new MovieGenre() { Id = 2, GenreId = 2, MovieId = 1 },
-                new MovieGenre() { Id = 3, GenreId = 3, MovieId = 2 },
-                new MovieGenre() { Id = 4, GenreId = 4, MovieId = 2 },
-                new MovieGenre() { Id = 5, GenreId = 1, MovieId = 3 },
-                new MovieGenre() { Id = 6, GenreId = 2, MovieId = 3 },
-                new MovieGenre() { Id = 7, GenreId = 4, MovieId = 4 },
-                new MovieGenre() { Id = 8, GenreId = 4, MovieId = 5 }
+                new MovieGenre() { MovieId = 1, GenreId = 1 },
+                new MovieGenre() { MovieId = 1, GenreId = 2 },
+                new MovieGenre() { MovieId = 2, GenreId = 3 },
+                new MovieGenre() { MovieId = 2, GenreId = 4 },
+                new MovieGenre() { MovieId = 3, GenreId = 1 },
+                new MovieGenre() { MovieId = 3, GenreId = 2 },
+                new MovieGenre() { MovieId = 4, GenreId = 3 },
+                new MovieGenre() { MovieId = 4, GenreId = 4 },
+                new MovieGenre() { MovieId = 5, GenreId = 4 }
 
                 );
+
+        
+
 
             #endregion
 

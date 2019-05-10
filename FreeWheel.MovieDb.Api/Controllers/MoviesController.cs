@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FreeWheel.MovieDb.Api.Contexts;
 using FreeWheel.MovieDb.Api.Models;
 using FreeWheel.MovieDb.Api.Services;
 
@@ -20,7 +16,7 @@ namespace FreeWheel.MovieDb.Api.Controllers
         public MoviesController(IMoviesService service)
         {
             _movies = service;
-            _movies.Context().Database.EnsureCreated(); //seems necessary for In-Memory creation
+            _movies.Context().Database.EnsureCreated();
         }
 
         //// GET: api/Movies
@@ -46,7 +42,6 @@ namespace FreeWheel.MovieDb.Api.Controllers
             {
                 var genresParam = genreList.Split(",").ToList();
 
-                //  ListA.Where(a => ListX.Any(x => x.b == a.b))
                 genres = _movies.GetGenres().Where(gl => genresParam.Contains(gl.Name)).ToList();
             }
 

@@ -47,7 +47,7 @@ namespace FreeWheel.MovieDb.Api.Services
 
             if (genres.Any())
             {
-                query = query.Where(m => m.MovieGenres.Any(mg => genres.Any()));
+                query = query.Where(m => m.MovieGenres.Any(mg => genres.Any(g => g.GenreId == mg.GenreId)));
             }
 
             return query.ToList();
