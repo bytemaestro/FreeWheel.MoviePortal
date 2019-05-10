@@ -14,6 +14,6 @@ namespace FreeWheel.MovieDb.Api.Models
 
         public Movie Movie { get; set; }
 
-        public Genre Genre { get; set; }
+        //public Genre Genre { get; set; }
     }
 }

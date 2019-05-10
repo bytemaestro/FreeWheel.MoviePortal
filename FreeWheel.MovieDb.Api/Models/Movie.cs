@@ -15,7 +15,8 @@ namespace FreeWheel.MovieDb.Api.Models
 
         public virtual ICollection<MovieGenre> MovieGenres { get; } = new List<MovieGenre>();
 
-        public virtual List<Review> UserReviews { get; set; }
+        public virtual ICollection<Review> UserReviews { get; } = new List<Review>();
+
 
     }
 }

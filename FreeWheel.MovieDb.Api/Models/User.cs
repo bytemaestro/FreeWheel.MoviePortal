@@ -10,7 +10,7 @@ namespace FreeWheel.MovieDb.Api.Models
 
         public string UserName {get; set;}
 
-        public List<Review> UserReviews { get; set; }
+        public virtual ICollection<Review> UserReviews { get; } = new List<Review>();
 
     }
 }

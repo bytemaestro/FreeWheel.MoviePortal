@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FreeWheel.MovieDb.Api.Contexts;
 using FreeWheel.MovieDb.Api.Services;
 using Microsoft.AspNetCore.Builder;
@@ -9,8 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace FreeWheel.MovieDb.Api
 {
@@ -27,14 +22,14 @@ namespace FreeWheel.MovieDb.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                    .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); //fix truncate issue with .net core
+                    .AddJsonOptions(options => 
+                            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); //fix truncate issue with .net core
 
             //services
             services.AddTransient<IMoviesService, MoviesService>();
 
             //db contexts
             services.AddDbContext<MoviesContext>();
-            //services.AddDbContext<MoviesContext>().AddEntityFrameworkInMemoryDatabase();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

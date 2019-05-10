@@ -50,6 +50,18 @@ namespace FreeWheel.MovieDb.Api.Controllers
             return movies.ToList();
         }
 
+        //[HttpGet]
+        //[Route("api/[controller]/topaverage/")]
+        //public ActionResult<IEnumerable<Movie>> GetTopRatedMovies()
+        //{
+        //}
+
+        //[HttpGet]
+        //[Route("api/[controller]/usertop/")]
+        //public ActionResult<IEnumerable<Movie>> GetTopRatedMoviesByUser()
+        //{
+        //}
+
         // GET: api/Movies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Movie>> GetMovie(int id)

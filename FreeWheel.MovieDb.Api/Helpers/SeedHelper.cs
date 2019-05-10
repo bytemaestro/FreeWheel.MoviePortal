@@ -31,9 +31,17 @@ namespace FreeWheel.MovieDb.Api.Helpers
                 a.HasKey("MovieId", "GenreId");
             });
 
+            modelBuilder.Entity<Movie>().OwnsMany(p => p.UserReviews, a =>
+            {
+                a.HasForeignKey("MovieId");
+                a.Property<int>("ReviewId");
+                a.HasKey("ReviewId", "MovieId");
+            });
+
             modelBuilder.Entity<MovieGenre>().HasData(
                 new MovieGenre() { MovieId = 1, GenreId = 1 },
                 new MovieGenre() { MovieId = 1, GenreId = 2 },
+                new MovieGenre() { MovieId = 2, GenreId = 1 },
                 new MovieGenre() { MovieId = 2, GenreId = 3 },
                 new MovieGenre() { MovieId = 2, GenreId = 4 },
                 new MovieGenre() { MovieId = 3, GenreId = 1 },
@@ -60,10 +68,14 @@ namespace FreeWheel.MovieDb.Api.Helpers
 
                // u.OwnsMany(ur => ur.UserReviews);
             });
-                
+
+            //modelBuilder.Entity<Review>().OwnsOne(p => p.Movie, a =>
+            //{
+            //    a.HasForeignKey("MovieId");
+            //});
 
             #endregion
-          
+
 
 
             #region ReviewSeed
@@ -79,6 +91,18 @@ namespace FreeWheel.MovieDb.Api.Helpers
                 new Review { ReviewId = 6, UserId = 2, MovieId = 3, Rating = 4 });
 
                });
+
+
+            modelBuilder.Entity<User>().OwnsMany(p => p.UserReviews, a =>
+            {
+                a.HasForeignKey("UserId");
+                a.Property<int>("ReviewId");
+                a.HasKey("ReviewId", "UserId");
+            });
+
+
+     
+
 
             #endregion
         }

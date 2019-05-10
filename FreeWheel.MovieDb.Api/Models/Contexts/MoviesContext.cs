@@ -40,24 +40,20 @@ namespace FreeWheel.MovieDb.Api.Contexts
                 .WithMany(mg => mg.MovieGenres)
                 .HasForeignKey(m => m.MovieId);
 
-
-            modelBuilder.Entity<MovieGenre>()
-                .HasOne(g => g.Genre)
-                .WithMany(mg => mg.MovieGenres)
-                .HasForeignKey(g => g.GenreId);
-
             modelBuilder.Entity<Review>()
             .HasKey(r => new { r.MovieId, r.UserId });
+
+            modelBuilder.Entity<Review>()
+                .HasOne(ur => ur.Movie)
+                .WithMany(m => m.UserReviews)
+                .HasForeignKey(ur => ur.MovieId);
 
             modelBuilder.Entity<Review>()
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserReviews)
                 .HasForeignKey(ur => ur.UserId);
 
-            modelBuilder.Entity<Review>()
-                .HasOne(ur => ur.Movie)
-                .WithMany(m => m.UserReviews)
-                .HasForeignKey(ur => ur.MovieId);
+            
 
 
             #endregion
