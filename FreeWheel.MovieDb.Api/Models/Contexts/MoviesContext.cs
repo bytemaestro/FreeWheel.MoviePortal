@@ -31,27 +31,28 @@ namespace FreeWheel.MovieDb.Api.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Relationships
-            modelBuilder.Entity<MovieGenre>()
-             .HasKey(t => new { t.GenreId, t.MovieId });
+            //modelBuilder.Entity<MovieGenre>()
+            // .HasKey(t => new { t.GenreId, t.MovieId });
 
-            modelBuilder.Entity<MovieGenre>()
-                .HasOne(m => m.Movie)
-                .WithMany(mg => mg.MovieGenres)
-                .HasForeignKey(m => m.MovieId);
+            //modelBuilder.Entity<MovieGenre>()
+            //    .HasOne(m => m.Movie)
+            //    .WithMany(mg => mg.MovieGenres)
+            //    .HasForeignKey(m => m.MovieId);
 
-            modelBuilder.Entity<Review>()
-            .HasKey(r => new { r.MovieId, r.UserId });
+            //modelBuilder.Entity<Review>()
+            //.HasKey(r => new { r.MovieId, r.UserId });
 
-            modelBuilder.Entity<Review>()
-                .HasOne(ur => ur.Movie)
-                .WithMany(m => m.UserReviews)
-                .HasForeignKey(ur => ur.MovieId);
+            //modelBuilder.Entity<Review>()
+            //    .HasOne(ur => ur.Movie)
+            //    .WithMany(m => m.UserReviews)
+            //    .HasForeignKey(ur => ur.MovieId);
 
-            modelBuilder.Entity<Review>()
-                .HasOne(ur => ur.User)
-                .WithMany(u => u.UserReviews)
-                .HasForeignKey(ur => ur.UserId);
+            //modelBuilder.Entity<Review>()
+            //    .HasOne(ur => ur.User)
+            //    .WithMany(u => u.UserReviews)
+            //    .HasForeignKey(ur => ur.UserId);
 
+           
             #endregion
 
             //Seed data

@@ -3,6 +3,7 @@ using FreeWheel.MovieDb.Api.Contexts;
 using FreeWheel.MovieDb.Api.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace FreeWheel.MovieDb.Api.Services
 {
@@ -36,16 +37,23 @@ namespace FreeWheel.MovieDb.Api.Services
                     throw new ArgumentException("Movie not found to rate!");
                 }
 
-                var review = movie.UserReviews.Where(ur => ur.User.UserId == userId).FirstOrDefault();
+                var review = movie.UserReviews.Where(ur => ur.UserId == userId).FirstOrDefault();
                 if (review != null)
                 {
                      review.Rating = rating;
-
+                    _db.Entry(review).State = EntityState.Modified;
                     _db.Ratings.Update(review);
+                    
                 }
                 else
                 {
-                    _db.Ratings.Add(new Review { MovieId = movieId, UserId = userId, Rating = rating });
+                    var reviewId = _db.Ratings.Max(x => x.ReviewId);
+                    review = new Review { ReviewId = reviewId + 1, MovieId = movieId, UserId = userId, Rating = rating };
+
+                    _db.Entry(review).State = EntityState.Added;
+
+                    _db.Ratings.Add(review);
+                   
                 }
 
                 _db.SaveChanges();
@@ -117,14 +125,17 @@ namespace FreeWheel.MovieDb.Api.Services
 
         public IEnumerable<object> GetUserRatings(int userId)
         {
-            List<dynamic> ratings = new List<dynamic>();
+          List<dynamic> ratings = new List<dynamic>();
 
-          _db.Ratings.Where(r => r.UserId == userId).ToList().ForEach(mr =>
+          _db.Movies.ToList().ForEach(mr =>
           {
-              ratings.Add(new {  mr.Movie,  mr.Rating });
+              mr.UserReviews.Where(ur => ur.UserId == userId).ToList().ForEach ( r=>
+              {
+                  ratings.Add(new { r.MovieId, r.Movie.Title, r.Movie.Year, r.Rating });
+              });
           });
 
-            return ratings.OrderByDescending(x => x.Rating);
+            return ratings.OrderBy(x => x.Title).OrderByDescending(x => x.Rating);
         }
         
         /// <summary>

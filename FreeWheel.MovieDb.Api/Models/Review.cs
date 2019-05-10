@@ -13,7 +13,6 @@ namespace FreeWheel.MovieDb.Api.Models
             _maxRating = 5; //get from app.settings
         }
 
-        [Key]
         public int ReviewId {get; set;}
 
         public int UserId { get; set; }

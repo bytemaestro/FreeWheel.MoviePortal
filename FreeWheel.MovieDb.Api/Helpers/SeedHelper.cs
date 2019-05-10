@@ -34,8 +34,8 @@ namespace FreeWheel.MovieDb.Api.Helpers
             modelBuilder.Entity<Movie>().OwnsMany(p => p.UserReviews, a =>
             {
                 a.HasForeignKey("MovieId");
-                a.Property<int>("ReviewId");
-                a.HasKey("ReviewId", "MovieId");
+                a.Property<int>("MovieId");
+                a.HasKey("ReviewId", "MovieId", "UserId");
             });
 
             modelBuilder.Entity<MovieGenre>().HasData(
@@ -66,7 +66,7 @@ namespace FreeWheel.MovieDb.Api.Helpers
                     new User() { UserId = 2, UserName = "hankaaron" },
                     new User() { UserId = 3, UserName = "johndoe" });
 
-               // u.OwnsMany(ur => ur.UserReviews);
+              
             });
 
             //modelBuilder.Entity<Review>().OwnsOne(p => p.Movie, a =>
@@ -93,12 +93,12 @@ namespace FreeWheel.MovieDb.Api.Helpers
                });
 
 
-            modelBuilder.Entity<User>().OwnsMany(p => p.UserReviews, a =>
-            {
-                a.HasForeignKey("UserId");
-                a.Property<int>("ReviewId");
-                a.HasKey("ReviewId", "UserId");
-            });
+            //modelBuilder.Entity<User>().OwnsMany(p => p.UserReviews, a =>
+            //{
+            //    a.HasForeignKey("UserId");
+            //    a.Property<int>("UserId");
+            //    a.HasKey("ReviewId", "MovieId", "UserId");
+            //});
 
 
      

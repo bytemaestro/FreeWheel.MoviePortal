@@ -4,10 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using FreeWheel.MovieDb.Api.Models;
 using FreeWheel.MovieDb.Api.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace FreeWheel.MovieDb.Api.Controllers
 {
-    
+
     [ApiController]
     public class MoviesController : ControllerBase
     {
@@ -79,35 +80,34 @@ namespace FreeWheel.MovieDb.Api.Controllers
             return movie;
         }
 
-        // PUT: api/Movies/5
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutMovie(int id, Movie movie)
-        //{
-        //    if (id != movie.MovieId)
-        //    {
-        //        return BadRequest();
-        //    }
 
-        //    _context.Entry(movie).State = EntityState.Modified;
+        [HttpPut]
+        [Route("api/[controller]/ratings/rate/{userId}/{movieId}/{rating}")]
+        public async Task<IActionResult> PutRating(int userId, int movieId, int rating)
+        {
+            if (userId == 0 || movieId == 0 )
+            {
+                return BadRequest();
+            }
 
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!MovieExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            try
+            {
+                _movies.RateMovie(userId, movieId, rating);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RatingExists(userId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
         //// POST: api/Movies
         //[HttpPost]
@@ -138,6 +138,11 @@ namespace FreeWheel.MovieDb.Api.Controllers
         private bool MovieExists(int id)
         {
             return _movies.Context().Movies.Any(e => e.MovieId == id);
+        }
+
+        private bool RatingExists(int userId)
+        {
+            return _movies.Context().Ratings.Any(e => e.User.UserId == userId);
         }
     }
 }
