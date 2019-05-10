@@ -20,17 +20,50 @@ namespace FreeWheel.MovieDb.Api.Services
             return _db;
         }
 
-        //public void Add(string title, int year, List<Genre> genres)
-        //{
-        //    var movie = new Movie { Title = title, Year = year, MovieGenres = genres };
+        /// <summary>
+        /// Rates a movie by userId, movieId.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="movieId"></param>
+        /// <param name="rating"></param>
+        public void RateMovie(int userId, int movieId, int rating)
+        {
+            try
+            {
+                var movie = _db.Movies.Where(m => m.MovieId == movieId).FirstOrDefault();
+                if (movie == null)
+                {
+                    throw new ArgumentException("Movie not found to rate!");
+                }
 
-        //    movie.MovieId = _db.Movies.Max(m => m.MovieId) + 1;
+                var review = movie.UserReviews.Where(ur => ur.User.UserId == userId).FirstOrDefault();
+                if (review != null)
+                {
+                     review.Rating = rating;
 
-        //    _db.Movies.Add(movie);
+                    _db.Ratings.Update(review);
+                }
+                else
+                {
+                    _db.Ratings.Add(new Review { MovieId = movieId, UserId = userId, Rating = rating });
+                }
 
-        //    _db.SaveChanges();
-        //}
+                _db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
+        }
+
+        /// <summary>
+        /// Finds moves by title, year, or genre.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="year"></param>
+        /// <param name="genres"></param>
+        /// <returns></returns>
         public IEnumerable<Movie> Find(string title, int year, List<Genre> genres)
         {
             var query = _db.Movies.AsEnumerable();
@@ -58,29 +91,46 @@ namespace FreeWheel.MovieDb.Api.Services
 
         }
 
-        public IEnumerable<object> TopRatedMovies()
+        /// <summary>
+        /// Returns the top average ratings
+        /// </summary>
+        /// <returns>List of Movie, and average use rating.</returns>
+        public IEnumerable<object> GetAverageMovieRating()
         {
-            List<dynamic> list = new List<dynamic>();
+            List<dynamic> ratings = new List<dynamic>();
 
-            _db.Movies.ToList().ForEach(m =>
-           {
-                var q = m.UserReviews.GroupBy(r => r.MovieId, rt => rt.Rating)
-                           .Select(g => new
-                           {
-                               MovieId = g.Key,
-                               Rating = g.Average()
-                           });
-
-               list.Add(q);
-               
-
+           _db.Movies.ToList().ForEach(m =>
+            {
+                ratings.Add(
+                    m.UserReviews
+                        .GroupBy(r => r.MovieId, rt => rt.Rating)
+                        .Select(g => new
+                        {
+                            MovieId = g.Key,
+                            Rating = g.Average()
+                        })
+                    );
            });
 
-
-            return list.ToList();
-
+          return ratings.ToList().OrderByDescending(x => x.Rating);
         }
 
+        public IEnumerable<object> GetUserRatings(int userId)
+        {
+            List<dynamic> ratings = new List<dynamic>();
+
+          _db.Ratings.Where(r => r.UserId == userId).ToList().ForEach(mr =>
+          {
+              ratings.Add(new {  mr.Movie,  mr.Rating });
+          });
+
+            return ratings.OrderByDescending(x => x.Rating);
+        }
+        
+        /// <summary>
+        /// GetGenres returns the system movie genres.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Genre> GetGenres()
         {
            return _db.Genres.ToList();

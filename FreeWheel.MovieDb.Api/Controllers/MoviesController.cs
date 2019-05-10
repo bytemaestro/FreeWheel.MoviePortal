@@ -55,14 +55,15 @@ namespace FreeWheel.MovieDb.Api.Controllers
         [Route("api/[controller]/ratings/top")]
         public ActionResult<IEnumerable<object>> GetTopRatedMovies()
         {
-            return _movies.TopRatedMovies().ToList();
+            return _movies.GetAverageMovieRating().Take(5).ToList();
         }
 
-        //[HttpGet]
-        //[Route("api/[controller]/usertop/")]
-        //public ActionResult<IEnumerable<Movie>> GetTopRatedMoviesByUser()
-        //{
-        //}
+        [HttpGet]
+        [Route("api/[controller]/ratings/topbyuser/{userId}")]
+        public ActionResult<IEnumerable<object>> GetTopRatedMoviesByUser(int userId)
+        {
+            return _movies.GetUserRatings(userId).Take(5).ToList();
+        }
 
         // GET: api/Movies/5
         [HttpGet("{id}")]

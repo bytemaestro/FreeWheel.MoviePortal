@@ -18,7 +18,6 @@ namespace FreeWheel.MovieDb.Api.Contexts
 
         public MoviesContext(DbContextOptions<MoviesContext> options) : base(options)
         {
-           
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -52,9 +51,6 @@ namespace FreeWheel.MovieDb.Api.Contexts
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.UserReviews)
                 .HasForeignKey(ur => ur.UserId);
-
-            
-
 
             #endregion
 
