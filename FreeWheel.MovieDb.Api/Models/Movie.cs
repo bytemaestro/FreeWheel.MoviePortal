@@ -13,6 +13,8 @@ namespace FreeWheel.MovieDb.Api.Models
 
         public int Year { get; set; }
 
+        public decimal RunningTime { get; set; }
+
         public virtual ICollection<MovieGenre> MovieGenres { get; } = new List<MovieGenre>();
 
         public virtual ICollection<Review> UserReviews { get; } = new List<Review>();

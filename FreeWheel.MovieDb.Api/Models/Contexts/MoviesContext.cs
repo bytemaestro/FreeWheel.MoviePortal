@@ -18,6 +18,7 @@ namespace FreeWheel.MovieDb.Api.Contexts
 
         public MoviesContext(DbContextOptions<MoviesContext> options) : base(options)
         {
+           Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -25,39 +26,42 @@ namespace FreeWheel.MovieDb.Api.Contexts
             optionsBuilder.EnableDetailedErrors(true);
             optionsBuilder.EnableSensitiveDataLogging(true);
             optionsBuilder.UseInMemoryDatabase("Movies");
-            //optionsBuilder.UseInMemoryDatabase("server=.;database=moviesDb;trusted_connection=true;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             #region Relationships
-            //modelBuilder.Entity<MovieGenre>()
-            // .HasKey(t => new { t.GenreId, t.MovieId });
 
-            //modelBuilder.Entity<MovieGenre>()
-            //    .HasOne(m => m.Movie)
-            //    .WithMany(mg => mg.MovieGenres)
-            //    .HasForeignKey(m => m.MovieId);
+            modelBuilder.Entity<Movie>().OwnsMany(m => m.MovieGenres, mk =>
+            {
+                mk.HasForeignKey("MovieId");
+                mk.Property<int>("MovieId");
+                mk.HasKey("MovieId", "GenreId");
+            });
 
-            //modelBuilder.Entity<Review>()
-            //.HasKey(r => new { r.MovieId, r.UserId });
+            modelBuilder.Entity<Movie>().OwnsMany(m => m.UserReviews, ur =>
+            {
+                ur.HasForeignKey("MovieId");
+                ur.Property<int>("MovieId");
+                ur.HasKey("ReviewId", "MovieId", "UserId");
+            });
 
-            //modelBuilder.Entity<Review>()
-            //    .HasOne(ur => ur.Movie)
-            //    .WithMany(m => m.UserReviews)
-            //    .HasForeignKey(ur => ur.MovieId);
+            modelBuilder.Entity<MovieGenre>()
+             .HasKey(mg => new { mg.GenreId, mg.MovieId });
 
-            //modelBuilder.Entity<Review>()
-            //    .HasOne(ur => ur.User)
-            //    .WithMany(u => u.UserReviews)
-            //    .HasForeignKey(ur => ur.UserId);
+            modelBuilder.Entity<Review>()
+            .HasKey(mg => new { mg.UserId, mg.MovieId });
 
-           
+            modelBuilder.Entity<User>().OwnsMany(u=> u.UserReviews, ur =>
+            {
+                ur.HasForeignKey("UserId");
+                ur.Property<int>("UserId");
+                ur.HasKey("UserId", "MovieId", "ReviewId");
+            });
             #endregion
 
             //Seed data
             SeedHelper.SeedMovieDb(modelBuilder);
-
 
         }
     }

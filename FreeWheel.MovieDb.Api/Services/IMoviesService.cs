@@ -9,13 +9,13 @@ namespace FreeWheel.MovieDb.Api.Services
     {
         MoviesContext Context();
 
-        IEnumerable<Movie> Find(string title, int year, List<Genre> genres);
+        IEnumerable<dynamic> Find(string title, int year, List<Genre> genres);
 
         IEnumerable<Genre> GetGenres();
 
-        IEnumerable<object> GetAverageMovieRating();
+        IEnumerable<dynamic> GetMoviesWithAverageRating();
 
-        IEnumerable<object> GetUserRatings(int userId);
+        IEnumerable<dynamic> GetUserRatings(int userId);
 
         Task<Review> RateMovieAsync(int userId, int movieId, int rating);
     }

@@ -75,7 +75,7 @@ namespace FreeWheel.MovieDb.Api.Services
         /// <param name="year"></param>
         /// <param name="genres"></param>
         /// <returns></returns>
-        public IEnumerable<Movie> Find(string title, int year, List<Genre> genres)
+        public IEnumerable<dynamic> Find(string title, int year, List<Genre> genres)
         {
             var query = _db.Movies.AsEnumerable();
 
@@ -83,7 +83,7 @@ namespace FreeWheel.MovieDb.Api.Services
             {
                 query = query.Where(m => m.Title.Contains(title, StringComparison.CurrentCultureIgnoreCase));
             }
-
+             
             if (year != 0)
             {
                 query = query.Where(m => m.Year == year);
@@ -91,21 +91,49 @@ namespace FreeWheel.MovieDb.Api.Services
 
             if (genres.Any())
             {
-               //query only matching all genres
-               genres.ForEach(g =>
-               {
+                //query only matching all genres
+                genres.ForEach(g =>
+                {
                     query = query.Where(m => m.MovieGenres.Any(x => x.GenreId == g.GenreId));
-               });
+                });
             }
 
-            return query.ToList();
+           return query.Select(m =>
+           {
+               return new
+               {
+                   m.MovieId,
+                   m.Title,
+                   YearOfRelease = m.Year,
+                   m.RunningTime,
+                   Genres = string.Join(",", m.MovieGenres.Select(mg => mg.Genre.Name)),
+                   AverageRating = GetAverageMovieRating(m.MovieId)
+
+               };
+           }).ToList();
+        }
+
+        public dynamic GetAverageMovieRating(int movieId)
+        {
+            var averageRating = 0d;
+
+            var movie = _db.Movies.Find(movieId);
+            if (movie != null)
+            {
+                if (movie.UserReviews.Any())
+                {
+                    averageRating = movie.UserReviews.Where(ur => ur != null).Average(ur => ur.Rating);
+                }
+            }
+            
+            return averageRating;
         }
 
         /// <summary>
         /// Returns the top average ratings
         /// </summary>
         /// <returns>List of Movie, and average use rating.</returns>
-        public IEnumerable<object> GetAverageMovieRating()
+        public IEnumerable<object> GetMoviesWithAverageRating()
         {
             List<dynamic> ratings = new List<dynamic>();
 

@@ -29,19 +29,7 @@ namespace FreeWheel.MovieDb.Api.Helpers
                  new Movie() { MovieId = 10, Title = "National Tresure", Year = 2004 }
                 );
 
-            modelBuilder.Entity<Movie>().OwnsMany(p => p.MovieGenres, a =>
-            {
-                a.HasForeignKey("MovieId");
-                a.Property<int>("MovieId");
-                a.HasKey("MovieId", "GenreId");
-            });
-
-            modelBuilder.Entity<Movie>().OwnsMany(p => p.UserReviews, a =>
-            {
-                a.HasForeignKey("MovieId");
-                a.Property<int>("MovieId");
-                a.HasKey("ReviewId", "MovieId", "UserId");
-            });
+       
 
             modelBuilder.Entity<MovieGenre>().HasData(
                 new MovieGenre() { MovieId = 1, GenreId = 1 },

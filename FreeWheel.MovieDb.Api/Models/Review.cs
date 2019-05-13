@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace FreeWheel.MovieDb.Api.Models
 {
@@ -10,7 +9,7 @@ namespace FreeWheel.MovieDb.Api.Models
 
         public Review()
         {
-            _maxRating = 5; //get from app.settings
+            _maxRating = 5; //todo: get from settings
         }
 
         public int ReviewId {get; set;}

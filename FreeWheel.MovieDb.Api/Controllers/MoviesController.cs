@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FreeWheel.MovieDb.Api.Controllers
 {
-
     [ApiController]
     public class MoviesController : ControllerBase
     {
@@ -17,38 +16,42 @@ namespace FreeWheel.MovieDb.Api.Controllers
         public MoviesController(IMoviesService service)
         {
             _movies = service;
-            _movies.Context().Database.EnsureCreated();
         }
 
         // GET: api/Movies
         [HttpGet]
         [Route("api/[controller]")]
-        public ActionResult<IEnumerable<Movie>> GetMovies(string title, int year, string genreList)
+        public ActionResult<IEnumerable<dynamic>> GetMovies(string title, int year, string genreList)
         {
             if (string.IsNullOrEmpty(title) && year == 0 && string.IsNullOrEmpty(genreList))
             {
-                return BadRequest();
+                return BadRequest("The movie search criteria is missing or invalid.");
             }
 
             var genres = new List<Genre>();
-
             if (!string.IsNullOrEmpty(genreList))
             {
                 var genresParam = genreList.Split(",").ToList();
-
-                genres = _movies.GetGenres().Where(gl => genresParam.Contains(gl.Name)).ToList();
+                if (genresParam.Any())
+                {
+                    genres = _movies.GetGenres().Where(gl => genresParam.Contains(gl.Name)).ToList();
+                }
             }
 
             var movies = _movies.Find(title, year, genres);
+            if (movies.Any())
+            {
+                return movies.ToList();
+            }
 
-            return movies.ToList();
+            return NotFound();
         }
 
         [HttpGet]
         [Route("api/[controller]/ratings/top")]
         public ActionResult<IEnumerable<object>> GetTopRatedMovies()
         {
-            return _movies.GetAverageMovieRating().Take(5).ToList();
+            return _movies.GetMoviesWithAverageRating().Take(5).ToList();
         }
 
         [HttpGet]
@@ -79,7 +82,7 @@ namespace FreeWheel.MovieDb.Api.Controllers
         {
             if (userId == 0 || movieId == 0 )
             {
-                return BadRequest();
+                return NoContent();
             }
 
             try
@@ -89,13 +92,14 @@ namespace FreeWheel.MovieDb.Api.Controllers
                 {
                     return CreatedAtAction("PutRating", review);
                 }
+
                 return NoContent();
             }
             catch (DbUpdateConcurrencyException)
             {
                 if (!RatingExists(userId, movieId))
                 {
-                    return NotFound();
+                    return Conflict();
                 }
                 else
                 {
