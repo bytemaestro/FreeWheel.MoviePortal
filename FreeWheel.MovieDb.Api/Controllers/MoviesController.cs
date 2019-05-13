@@ -17,7 +17,6 @@ namespace FreeWheel.MovieDb.Api.Controllers
     {
         private readonly IMoviesService _movies;
         private readonly IConfiguration _config;
-        private readonly RatingsConfig _ratingsConfig;
 
         public MoviesController(IMoviesService service, IConfiguration config)
         {
