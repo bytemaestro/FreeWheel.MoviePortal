@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using FreeWheel.MovieDb.Api.Models;
 using FreeWheel.MovieDb.Api.Services;
 using Microsoft.EntityFrameworkCore;
+using System;
+using FreeWheel.MovieDb.Api.Models.Validation;
 
 namespace FreeWheel.MovieDb.Api.Controllers
 {
     [ApiController]
+    
     public class MoviesController : ControllerBase
     {
         private readonly IMoviesService _movies;
@@ -51,14 +54,45 @@ namespace FreeWheel.MovieDb.Api.Controllers
         [Route("api/[controller]/ratings/top")]
         public ActionResult<IEnumerable<object>> GetTopRatedMovies()
         {
-            return _movies.GetMoviesWithAverageRating().Take(5).ToList();
+            try
+            {
+                var ratedMovies = _movies.GetMoviesWithAverageRating().Take(5).ToList();
+                if (ratedMovies != null && ratedMovies.Any())
+                {
+                    return ratedMovies;
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+           
         }
 
         [HttpGet]
         [Route("api/[controller]/ratings/topbyuser/{userId}")]
         public ActionResult<IEnumerable<object>> GetTopRatedMoviesByUser(int userId)
         {
-            return _movies.GetUserRatings(userId).Take(5).ToList();
+            try
+            {
+                var ratedMovies = _movies.GetUserRatings(userId).Take(5).ToList();
+                if (ratedMovies != null && ratedMovies.Any())
+                {
+                    return ratedMovies;
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         // GET: api/Movies/5
@@ -75,10 +109,10 @@ namespace FreeWheel.MovieDb.Api.Controllers
             return movie;
         }
 
-
+        [ValidateModel]
         [HttpPut]
         [Route("api/[controller]/ratings/rate/{userId}/{movieId}/{rating}")]
-        public async Task<IActionResult> PutRating(int userId, int movieId, int rating)
+        public async Task<ActionResult<Review>> PutRating(int userId, int movieId, [Bind("Review,Rating, Review.Rating")]int rating)
         {
             if (userId == 0 || movieId == 0 )
             {
@@ -87,13 +121,27 @@ namespace FreeWheel.MovieDb.Api.Controllers
 
             try
             {
-                var review = await _movies.RateMovieAsync(userId, movieId, rating).ConfigureAwait(false);
-                if (review != null)
+                //TODO: !! Want to use Model Binding/Validation running out of time!!
+                if (rating < 0 || rating > 5)
                 {
-                    return CreatedAtAction("PutRating", review);
+                    return ValidationProblem(new ValidationProblemDetails()
+                    {
+                        Title = "Validation Error",
+                        Detail = "Rating must be from 1 to 5",
+                        Status = 400
+                    });
                 }
 
-                return NoContent();
+                if (ModelState.IsValid)
+                {
+                    var response = await _movies.RateMovieAsync(userId, movieId, rating).ConfigureAwait(false);
+                    if (response != null)
+                    {
+                        return new OkResult();
+                    }
+                }
+
+                return BadRequest();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -105,6 +153,11 @@ namespace FreeWheel.MovieDb.Api.Controllers
                 {
                     throw;
                 }
+            }
+            catch (ArgumentException)
+            {
+
+                return ValidationProblem();
             }
         }
 

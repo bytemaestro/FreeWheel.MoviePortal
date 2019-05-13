@@ -32,6 +32,7 @@ namespace FreeWheel.MovieDb.Api.Services
         {
             try
             {
+                
                 var movie = _db.Movies.Where(m => m.MovieId == movieId).FirstOrDefault();
                 if (movie == null)
                 {
@@ -145,7 +146,7 @@ namespace FreeWheel.MovieDb.Api.Services
                       .Select(g => new
                       {
                           MovieId = g.Key,
-                          AverageRating = g.Average()
+                          AverageRating = Math.Round(g.Average(),1)
                       });
 
                 if (rates.Any())

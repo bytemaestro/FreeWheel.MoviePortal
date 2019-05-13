@@ -52,12 +52,7 @@ namespace FreeWheel.MovieDb.Api.Contexts
             modelBuilder.Entity<Review>()
             .HasKey(mg => new { mg.UserId, mg.MovieId });
 
-            modelBuilder.Entity<User>().OwnsMany(u=> u.UserReviews, ur =>
-            {
-                ur.HasForeignKey("UserId");
-                ur.Property<int>("UserId");
-                ur.HasKey("UserId", "MovieId", "ReviewId");
-            });
+
             #endregion
 
             //Seed data

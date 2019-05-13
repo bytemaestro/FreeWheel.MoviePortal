@@ -1,15 +1,16 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FreeWheel.MovieDb.Api.Models
 {
     public class Review
     {
-        private readonly int _maxRating;
-        private int _rating;
+        //private readonly int _maxRating;
+        //private int _rating;
 
         public Review()
         {
-            _maxRating = 5; //todo: get from settings
+            //_maxRating = 5; //todo: get from settings
         }
 
         public int ReviewId {get; set;}
@@ -22,21 +23,8 @@ namespace FreeWheel.MovieDb.Api.Models
 
         public Movie Movie { get; set; }
 
-        public int Rating
-        {
-            get => _rating;
-            set
-            {
-                if (value >= 1 && value <= _maxRating)
-                {
-                    _rating = value;
-                }
-                else
-                {
-                    throw new ArgumentException($"Set Rating Error. Rating can only be 1 thru {_maxRating}.");
-                }
-                
-            }
-        }
+        [Range(0, 5)]
+        public int Rating { get; set; }
+       
     }
 }
