@@ -7,6 +7,7 @@ using FreeWheel.MovieDb.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using FreeWheel.MovieDb.Api.Models.Validation;
+using Microsoft.Extensions.Configuration;
 
 namespace FreeWheel.MovieDb.Api.Controllers
 {
@@ -15,10 +16,13 @@ namespace FreeWheel.MovieDb.Api.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly IMoviesService _movies;
+        private readonly IConfiguration _config;
+        private readonly RatingsConfig _ratingsConfig;
 
-        public MoviesController(IMoviesService service)
+        public MoviesController(IMoviesService service, IConfiguration config)
         {
             _movies = service;
+            _config = config;
         }
 
         // GET: api/Movies
@@ -114,6 +118,8 @@ namespace FreeWheel.MovieDb.Api.Controllers
         [Route("api/[controller]/ratings/rate/{userId}/{movieId}/{rating}")]
         public async Task<ActionResult<Review>> PutRating(int userId, int movieId, [Bind("Review,Rating, Review.Rating")]int rating)
         {
+            
+
             if (userId == 0 || movieId == 0 )
             {
                 return NoContent();
@@ -121,13 +127,15 @@ namespace FreeWheel.MovieDb.Api.Controllers
 
             try
             {
+                var maxRating = int.Parse(_config["RatingsConfig:MaxUserRatingValue"] ?? "5");
+
                 //TODO: !! Want to use Model Binding/Validation running out of time!!
-                if (rating < 0 || rating > 5)
+                if (rating < 0 || rating > maxRating)
                 {
                     return ValidationProblem(new ValidationProblemDetails()
                     {
                         Title = "Validation Error",
-                        Detail = "Rating must be from 1 to 5",
+                        Detail = $"Rating must be from 1 to {maxRating}",
                         Status = 400
                     });
                 }

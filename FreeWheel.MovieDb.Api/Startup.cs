@@ -33,7 +33,8 @@ namespace FreeWheel.MovieDb.Api
                             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); //fix truncate issue with .net core
 
             //configs
-            //  services.Configure<MyConfig>(Configuration.GetSection("MyConfig"));
+            services.Configure<RatingsConfig>(Configuration.GetSection("RatingsConfig"));
+            services.Configure<RatingsConfig>(Configuration);
 
             services.AddMvcCore().AddDataAnnotations();
 
