@@ -2,9 +2,7 @@
 Movie database with User Ratings
 Using dot.net Core 2.2 and Entity Framework Core (Code first - in memory)
 
-Didnt have time to add unit testing project!
-
-But did unit test! :)
+Just playing around with .net core 2.2
 
 routes are:
 
